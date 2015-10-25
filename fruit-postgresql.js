@@ -105,15 +105,13 @@ module.exports = (function () {
       var sqlQuery    = sql.Query()
         , sqlUpdate   = sqlQuery.update()
         , sqlSelect   = sqlQuery.select()
-        , pseudoTable = ''
         , set         = sqlUpdate.into(tableName).set(data).build().split(' SET ').pop().split('`').join('')
-      if(one) {
-        pseudoTable = ' (' + cleanQuery(sqlSelect.from(tableName).select().where(condition).limit(1).build(), tableName) + ') pseudoTable '
-      } else {
-        pseudoTable = ' (' + cleanQuery(sqlSelect.from(tableName).select().where(condition).build(), tableName) + ') pseudoTable '
-      }
+        , pseudoTable = sqlSelect.from(tableName).select().where(condition);
       
-      return 'UPDATE public."' + tableName + '" T SET ' + set + ' FROM ' + pseudoTable + ' WHERE T.id = pseudoTable.id; '
+      return 'UPDATE public."' + tableName  + '" T ' 
+        + ' SET ' + set 
+        + ' FROM  (' + cleanQuery((one ? pseudoTable.limit(1) : pseudoTable).build(), tableName) + ') pseudoTable ' 
+        + ' WHERE T.id = pseudoTable.id; '
     }
     
     function update (one, tableName, data, condition, callBack) {
