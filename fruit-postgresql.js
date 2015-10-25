@@ -77,6 +77,30 @@ module.exports = (function () {
       });
     }
     
+    this.find = function (tableName, condition, callBack) {
+      var sqlQuery  = sql.Query()
+        , sqlSelect = sqlQuery.select()
+        ,  query    = cleanQuery(sqlSelect.from(tableName).select().where(condition).build(), tableName);
+      
+      exec(query, function (err, results) {
+        callBack(err, results.rows)
+      });
+    }
+    
+    this.findAll = function (tableName, callBack) {
+      this.find(tableName, {}, callBack);
+    }
+    
+    this.findOne = function (tableName, condition, callBack) {
+      var sqlQuery  = sql.Query()
+        , sqlSelect = sqlQuery.select()
+        ,  query    = cleanQuery(sqlSelect.from(tableName).select().where(condition).limit(1).build(), tableName);
+      
+      exec(query, function (err, results) {
+        callBack(err, results.rows.shift())
+      });
+    }
+    
   }
   
   return new DataManager;
