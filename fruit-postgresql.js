@@ -135,6 +135,37 @@ module.exports = (function () {
       update (false, tableName, data, condition, callBack);
     }
     
+    function generateDeleteQuery (one, tableName, condition, callBack) {
+      var sqlQuery    = sql.Query()
+        , sqlDelete   = sqlQuery.remove()
+        , sqlSelect   = sqlQuery.select()
+        , pseudoTable = sqlSelect.from(tableName).select('id').where(condition)
+        
+      return 'DELETE FROM public."' + tableName  + '" WHERE id IN ' 
+        + ' (' + cleanQuery((one ? pseudoTable.limit(1) : pseudoTable).build(), tableName) + ');'
+    }
+    
+    function del (one, tableName, condition, callBack) {
+      var query = generateDeleteQuery(one, tableName, condition, callBack);
+      exec(query, function (err, results) {
+        callBack(err, err ? undefined : {
+          results : {
+              success       : true
+            , count         : results.rowCount
+            , affectedCount : results.rowCount
+          }
+        })
+      });
+    }
+    
+    this.delete = function (tableName, condition, callBack) {
+      del (true, tableName, condition, callBack);
+    }
+    
+    this.deleteAll = function (tableName, condition, callBack) {
+      del (false, tableName, condition, callBack);
+    }
+    
   }
   
   return new DataManager;
