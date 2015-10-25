@@ -101,6 +101,42 @@ module.exports = (function () {
       });
     }
     
+    function generateUpdateQuery (one, tableName, data, condition) {
+      var sqlQuery    = sql.Query()
+        , sqlUpdate   = sqlQuery.update()
+        , sqlSelect   = sqlQuery.select()
+        , pseudoTable = ''
+        , set         = sqlUpdate.into(tableName).set(data).build().split(' SET ').pop().split('`').join('')
+      if(one) {
+        pseudoTable = ' (' + cleanQuery(sqlSelect.from(tableName).select().where(condition).limit(1).build(), tableName) + ') pseudoTable '
+      } else {
+        pseudoTable = ' (' + cleanQuery(sqlSelect.from(tableName).select().where(condition).build(), tableName) + ') pseudoTable '
+      }
+      
+      return 'UPDATE public."' + tableName + '" T SET ' + set + ' FROM ' + pseudoTable + ' WHERE T.id = pseudoTable.id; '
+    }
+    
+    function update (one, tableName, data, condition, callBack) {
+      var query = generateUpdateQuery(one, tableName, data, condition);
+      exec(query, function (err, results) {
+        callBack(err, err ? undefined : {
+          results : {
+              success       : true
+            , count         : results.rowCount
+            , affectedCount : results.rowCount
+          }
+        })
+      });
+    }
+    
+    this.update = function (tableName, data, condition, callBack) {
+      update (true, tableName, data, condition, callBack);
+    }
+    
+    this.updateAll = function (tableName, data, condition, callBack) {
+      update (false, tableName, data, condition, callBack);
+    }
+    
   }
   
   return new DataManager;
