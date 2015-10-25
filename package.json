@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/nodefruit/fruit-postgresql/issues"
   },
-  "homepage": "https://github.com/nodefruit/fruit-postgresql#readme"
+  "homepage": "https://github.com/nodefruit/fruit-postgresql#readme",
+  "dependencies": {
+    "pg": "^4.4.3"
+  }
 }
