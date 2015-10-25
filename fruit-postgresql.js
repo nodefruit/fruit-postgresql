@@ -43,6 +43,10 @@ module.exports = (function () {
       return this;
     }
     
+    function cleanQuery (query, tableName) {
+      return query.replace('`' + tableName + '`', 'public."' + tableName + '"').split('`').join('')
+    }
+    
     function generateInsertQuery (tableName, data) {
       var sqlQuery  = sql.Query()
         , sqlInsert = sqlQuery.insert()
@@ -56,15 +60,11 @@ module.exports = (function () {
       } else {
         query = sqlInsert.into(tableName).set(data).build();
       }
-      return query
-        .replace('`' + tableName + '`', 'public."' + tableName + '"')
-        .split('`')
-        .join('')
-        + ' RETURNING id; ';
+      return cleanQuery(query, tableName) + ' RETURNING id; ';
     }
     
     this.insert = function (tableName, data, callBack) {
-      var query     = generateInsertQuery(tableName, data);
+      var query = generateInsertQuery(tableName, data);
       exec(query, function (err, results) {
         callBack(err, err ? undefined : {
             result : {
