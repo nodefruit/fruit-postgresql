@@ -166,6 +166,17 @@ module.exports = (function () {
       del (false, tableName, condition, callBack);
     }
     
+    this.count = function (tableName, condition, callBack) {
+      var sqlQuery  = sql.Query()
+        , sqlSelect = sqlQuery.select()
+        , query     = cleanQuery(sqlSelect.from(tableName).where(condition).count(null, 'count').build(), tableName);
+      
+      exec(query, function (err, results) {
+        if(err) return callBack(err);
+        callBack(null, results.rows[0].count);
+      });
+    }
+    
   }
   
   return new DataManager;
