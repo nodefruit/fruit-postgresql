@@ -2,12 +2,11 @@
 
 module.exports = (function () {
   
-  var pg      = require('pg')
-    , sql     = require('sql-query')
-    , config  = {};
+  var pg          = require('pg')
+    , sql         = require('sql-query')
+    , confString  = '';
 
-  // @todo : needs to be called only one time
-  function confStringify () {
+  function confStringify (config) {
     return 'postrgre://' 
       + config.user + ':'
       + config.password + '@'
@@ -16,7 +15,7 @@ module.exports = (function () {
   }
   
   function exec (query, callBack) {
-    pg.connect(confStringify(), function(err, client, done) {
+    pg.connect(confString, function(err, client, done) {
       if(err) return callBack(err);
       client.query(query, function (err, results) {
         client.end(); 
@@ -30,16 +29,16 @@ module.exports = (function () {
     
     this.type = 'postgresql';
     
-    this.connect = function (conf, callBack) {
-      config = conf;
+    this.connect = function (config, callBack) {
+      confString = confStringify(config);
       exec('SELECT 1 + 1 AS solution', function (err) {
         callBack(err);
       })
       return this;
     }
     
-    this.config = function (conf) {
-      config = conf;
+    this.config = function (config) {
+      confString = confStringify(config);
       return this;
     }
     
