@@ -76,13 +76,16 @@ module.exports = (function () {
       });
     }
     
-    this.find = function (tableName, condition, callBack) {
+    this.find = function (tableName, condition, callBack, limit, offset) {
       var sqlQuery  = sql.Query()
         , sqlSelect = sqlQuery.select()
         ,  query    = cleanQuery(sqlSelect.from(tableName).select().where(condition).build(), tableName);
       
+      if(limit)   query += ' LIMIT '  + limit;
+      if(offset)  query += ' OFFSET ' + offset;
+      
       exec(query, function (err, results) {
-        callBack(err, results.rows)
+        callBack(err, err ? undefined : results.rows)
       });
     }
     
@@ -96,7 +99,7 @@ module.exports = (function () {
         ,  query    = cleanQuery(sqlSelect.from(tableName).select().where(condition).limit(1).build(), tableName);
       
       exec(query, function (err, results) {
-        callBack(err, results.rows.shift())
+        callBack(err, err ? undefined :  results.rows.shift())
       });
     }
     
@@ -171,8 +174,7 @@ module.exports = (function () {
         , query     = cleanQuery(sqlSelect.from(tableName).where(condition).count(null, 'count').build(), tableName);
       
       exec(query, function (err, results) {
-        if(err) return callBack(err);
-        callBack(null, results.rows[0].count);
+        callBack(err, err ? undefined : results.rows[0].count);
       });
     }
     
