@@ -99,6 +99,50 @@ describe('Successfully inserting many rows', function () {
   });
 });
 
+describe('Unsuccessful insertion due to inexisting table', function () {
+  var error   = false
+    , result  = null
+    , table   = 'user_' + Math.random().toString(36).substring(7)
+    , data    = {
+        name  : 'khalid'
+      , age   : 26
+    };
+
+  beforeEach(function (done) {
+    adapter.insert(table, data, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should not insert', function () {
+    assert.equal(result, null);
+    assert.equal(error, true);
+  });
+});
+
+describe('Unsuccessful insertion due to incorrect data', function () {
+  var error     = false
+    , result    = null
+    , data      = {
+        myname  : 'khalid'
+      , myage   : 26
+    };
+
+  beforeEach(function (done) {
+    adapter.insert(tableName, data, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should not insert', function () {
+    assert.equal(result, null);
+    assert.equal(error, true);
+  });
+});
 
 describe('Droping the test table', function () {
   var success = false
