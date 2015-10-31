@@ -533,6 +533,126 @@ describe('unsuccessful updateAll query due to incorrect data', function () {
   });
 });
 
+describe('unsuccessful delete query due to inexisting table', function () {
+  var result    = null
+    , error     = null
+    , table     = 'user_' + Math.random().toString(36).substring(7)
+    , condition = { name : 'KHALID' }
+
+  beforeEach(function (done) {
+    adapter.delete(table, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('unsuccessful delete query due to incorrect condition', function () {
+  var result    = null
+    , error     = null
+    , condition = { myName : 'KHALID' }
+
+  beforeEach(function (done) {
+    adapter.delete(tableName, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('unsuccessful deleteAll query due to inexisting table', function () {
+  var result    = null
+    , error     = null
+    , table     = 'user_' + Math.random().toString(36).substring(7)
+    , condition = { name : 'KHALID' }
+
+  beforeEach(function (done) {
+    adapter.deleteAll(table, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('unsuccessful deleteAll query due to incorrect condition', function () {
+  var result    = null
+    , error     = null
+    , condition = { myName : 'KHALID' }
+
+  beforeEach(function (done) {
+    adapter.deleteAll(tableName, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('successful delete query', function () {
+  var result    = null
+    , error     = null
+    , condition = { name : 'KHALID' }
+
+  beforeEach(function (done) {
+    adapter.delete(tableName, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should delete one user successfully', function () {
+    assert.equal(error, false);
+    assert.equal(result.results.success, true);
+    assert.equal(result.results.count, 1);
+    assert.equal(result.results.affectedCount, 1);
+  });
+});
+
+describe('successful deleteAll query', function () {
+  var result    = null
+    , error     = null
+    , condition = {}
+
+  beforeEach(function (done) {
+    adapter.deleteAll(tableName, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should delete all the users successfully', function () {
+    assert.equal(error, false);
+    assert.equal(result.results.success, true);
+    assert.equal(result.results.count, 4);
+    assert.equal(result.results.affectedCount, 4);
+  });
+});
+
 describe('Droping the test table', function () {
   var success = false
     , query   = 'DROP TABLE ' + tableName;
