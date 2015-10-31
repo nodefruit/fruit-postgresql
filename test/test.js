@@ -407,6 +407,132 @@ describe('unsuccessful count query due to inexisting table', function () {
   });
 });
 
+describe('successful update query', function () {
+  var error     = false
+    , result    = null
+    , data      = { name : 'KHALID' }
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.update(tableName, data, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should update first user with name khalid', function () {
+    assert.equal(error, false);
+    assert.equal(result.results.success, true);
+    assert.equal(result.results.count, 1);
+    assert.equal(result.results.affectedCount, 1);
+  });
+});
+
+describe('successful updateAll query', function () {
+  var error     = false
+    , result    = null
+    , data      = { age : 50 }
+    , condition = { age : 30 }
+
+  beforeEach(function (done) {
+    adapter.updateAll(tableName, data, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should update all users with age 30', function () {
+    assert.equal(error, false);
+    assert.equal(result.results.success, true);
+    assert.equal(result.results.count, 3);
+    assert.equal(result.results.affectedCount, 3);
+  });
+});
+
+describe('unsuccessful update query due to inexisting table', function () {
+  var error     = false
+    , result    = null
+    , table     = 'user_' + Math.random().toString(36).substring(7)
+    , data      = { name : 'KHALID' }
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.update(table, data, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('unsuccessful update query due to incorrect data', function () {
+  var error     = false
+    , result    = null
+    , data      = { myname : 'KHALID' }
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.update(tableName, data, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('unsuccessful updateAll query due to inexisting table', function () {
+  var error     = false
+    , result    = null
+    , table     = 'user_' + Math.random().toString(36).substring(7)
+    , data      = { name : 'KHALID' }
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.updateAll(table, data, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
+describe('unsuccessful updateAll query due to incorrect data', function () {
+  var error     = false
+    , result    = null
+    , data      = { myname : 'KHALID' }
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.updateAll(tableName, data, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
 describe('Droping the test table', function () {
   var success = false
     , query   = 'DROP TABLE ' + tableName;
