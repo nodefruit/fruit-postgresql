@@ -144,6 +144,230 @@ describe('Unsuccessful insertion due to incorrect data', function () {
   });
 });
 
+describe('Successfully selecting data', function () {
+  var error     = false
+    , result    = null
+    , condition = {
+        name    : 'khalid'
+      , age     : 26
+    };
+
+  beforeEach(function (done) {
+    adapter.find(tableName, condition, function (err, rst) {
+      error   = err;
+      result  = rst;
+      done();
+    });
+  });
+
+  it('should find a user with the same name and age', function () {
+    assert.equal(result.length, 1);
+    assert.equal(result[0].name, condition.name);
+    assert.equal(result[0].age, condition.age);
+    assert.equal(error, null);
+  });
+});
+
+describe('Successfully selecting data with limit', function () {
+  var error     = false
+    , result    = null
+    , condition = { age: 30 };
+
+  beforeEach(function (done) {
+    adapter.find(tableName, condition, function (err, rst) {
+      error   = err;
+      result  = rst;
+      done();
+    }, 2);
+  });
+
+  it('should find 2 users with the same age', function () {
+    assert.equal(result.length, 2);
+    assert.equal(result[0].age, condition.age);
+    assert.equal(result[1].age, condition.age);
+    assert.equal(error, null);
+  });
+});
+
+describe('Successfully selecting data with an offset', function () {
+  var error     = false
+    , result    = null
+    , condition = { age: 30 };
+
+  beforeEach(function (done) {
+    adapter.find(tableName, condition, function (err, rst) {
+      error   = err;
+      result  = rst;
+      done();
+    }, null, 1);
+  });
+
+  it('should find 2 users with the same age starting from offset 1', function () {
+    assert.equal(result.length, 2);
+    assert.equal(result[0].age, condition.age);
+    assert.equal(result[1].age, condition.age);
+    assert.equal(error, null);
+  });
+});
+
+describe('Successfully selecting data with limit and offset', function () {
+  var error     = false
+    , result    = null
+    , condition = { age: 30 };
+
+  beforeEach(function (done) {
+    adapter.find(tableName, condition, function (err, rst) {
+      error   = err;
+      result  = rst;
+      done();
+    }, 1, 1);
+  });
+
+  it('should find only one user with the same age starting from offset 1', function () {
+    assert.equal(result.length, 1);
+    assert.equal(result[0].age, condition.age);
+    assert.equal(error, null);
+  });
+});
+
+describe('Successfully selecting one row', function () {
+  var error     = false
+    , result    = null
+    , condition = { age: 30 };
+
+  beforeEach(function (done) {
+    adapter.findOne(tableName, condition, function (err, rst) {
+      error   = err;
+      result  = rst;
+      done();
+    });
+  });
+
+  it('should find only one user', function () {
+    assert.equal(result.age, condition.age);
+    assert.equal(error, null);
+  });
+});
+
+describe('Successfully selecting all data', function () {
+  var error     = false
+    , result    = null;
+
+  beforeEach(function (done) {
+    adapter.findAll(tableName, function (err, rst) {
+      error   = err;
+      result  = rst;
+      done();
+    });
+  });
+
+  it('should find all 5 inserted users', function () {
+    assert.equal(result.length, 5);
+    assert.equal(error, null);
+  });
+});
+
+describe('Unsuccessful find query due to inexisting table', function () {
+  var error   = false
+    , result  = false
+    , table   = 'user_' + Math.random().toString(36).substring(7);
+
+  beforeEach(function (done) {
+    adapter.find(table, {}, function (err, rst) {
+      error   = !!err;
+      result  = !!rst;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, false);
+  });
+});
+
+describe('Unsuccessful find query due to incorrect condition', function () {
+  var error     = false
+    , result    = false
+    , condition = {
+        myname  : 'khalid'
+      , myage   : 26
+    };
+
+  beforeEach(function (done) {
+    adapter.find(tableName, condition, function (err, rst) {
+      error   = !!err;
+      result  = !!rst;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, false);
+  });
+});
+
+describe('Unsuccessful findOne query due to inexisting table', function () {
+  var error   = false
+    , result  = false
+    , table   = 'user_' + Math.random().toString(36).substring(7);
+
+  beforeEach(function (done) {
+    adapter.findOne(table, {}, function (err, rst) {
+      error   = !!err;
+      result  = !!rst;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, false);
+  });
+});
+
+describe('Unsuccessful findOne query due to incorrect condition', function () {
+  var error     = false
+    , result    = false
+    , condition = {
+        myname  : 'khalid'
+      , myage   : 26
+    };
+
+  beforeEach(function (done) {
+    adapter.findOne(tableName, condition, function (err, rst) {
+      error   = !!err;
+      result  = !!rst;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, false);
+  });
+});
+
+describe('Unsuccessful findAll query due to inexisting table', function () {
+  var error   = false
+    , result  = false
+    , table   = 'user_' + Math.random().toString(36).substring(7);
+
+  beforeEach(function (done) {
+    adapter.findAll(table, function (err, rst) {
+      error   = !!err;
+      result  = !!rst;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, false);
+  });
+});
+
 describe('Droping the test table', function () {
   var success = false
     , query   = 'DROP TABLE ' + tableName;
