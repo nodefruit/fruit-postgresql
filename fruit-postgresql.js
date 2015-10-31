@@ -18,7 +18,6 @@ module.exports = (function () {
     pg.connect(confString, function(err, client, done) {
       if(err) return callBack(err);
       client.query(query, function (err, results) {
-        client.end(); 
         done();
         callBack(err, results);
       })
