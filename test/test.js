@@ -368,6 +368,45 @@ describe('Unsuccessful findAll query due to inexisting table', function () {
   });
 });
 
+describe('successful count query', function () {
+  var error     = false
+    , result    = null
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.count(tableName, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should count users with name khalid', function () {
+    assert.equal(error, false);
+    assert.equal(result, 1);
+  });
+});
+
+describe('unsuccessful count query due to inexisting table', function () {
+  var error     = false
+    , result    = null
+    , table     = 'user_' + Math.random().toString(36).substring(7)
+    , condition = { name : 'khalid' }
+
+  beforeEach(function (done) {
+    adapter.count(table, condition, function (err, rst) {
+      result  = rst;
+      error   = !!err;
+      done();
+    });
+  });
+
+  it('should return an error', function () {
+    assert.equal(error, true);
+    assert.equal(result, null);
+  });
+});
+
 describe('Droping the test table', function () {
   var success = false
     , query   = 'DROP TABLE ' + tableName;
