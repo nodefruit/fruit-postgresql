@@ -1,0 +1,12 @@
+sudo: false
+language: node_js
+node_js:
+  - '0.10'
+  - '0.12'
+  - '4'
+services:
+  - postgresql
+before_script:
+  - npm install -g mocha
+  - - psql -c 'create database travis_ci_test;' -U postgres
+script: HOST="localhost" DB="travis_ci_test" USER="postgres" PASS="" npm test
