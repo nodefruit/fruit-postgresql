@@ -423,9 +423,9 @@ describe('successful update query', function () {
 
   it('should update first user with name khalid', function () {
     assert.equal(error, false);
-    assert.equal(result.results.success, true);
-    assert.equal(result.results.count, 1);
-    assert.equal(result.results.affectedCount, 1);
+    assert.equal(result.result.success, true);
+    assert.equal(result.result.count, 1);
+    assert.equal(result.result.affectedCount, 1);
   });
 });
 
@@ -445,9 +445,9 @@ describe('successful updateAll query', function () {
 
   it('should update all users with age 30', function () {
     assert.equal(error, false);
-    assert.equal(result.results.success, true);
-    assert.equal(result.results.count, 3);
-    assert.equal(result.results.affectedCount, 3);
+    assert.equal(result.result.success, true);
+    assert.equal(result.result.count, 3);
+    assert.equal(result.result.affectedCount, 3);
   });
 });
 
@@ -626,9 +626,9 @@ describe('successful delete query', function () {
 
   it('should delete one user successfully', function () {
     assert.equal(error, false);
-    assert.equal(result.results.success, true);
-    assert.equal(result.results.count, 1);
-    assert.equal(result.results.affectedCount, 1);
+    assert.equal(result.result.success, true);
+    assert.equal(result.result.count, 1);
+    assert.equal(result.result.affectedCount, 1);
   });
 });
 
@@ -647,9 +647,9 @@ describe('successful deleteAll query', function () {
 
   it('should delete all the users successfully', function () {
     assert.equal(error, false);
-    assert.equal(result.results.success, true);
-    assert.equal(result.results.count, 4);
-    assert.equal(result.results.affectedCount, 4);
+    assert.equal(result.result.success, true);
+    assert.equal(result.result.count, 4);
+    assert.equal(result.result.affectedCount, 4);
   });
 });
 

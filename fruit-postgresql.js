@@ -119,7 +119,7 @@ module.exports = (function () {
       var query = generateUpdateQuery(one, tableName, data, condition);
       exec(query, function (err, results) {
         callBack(err, err ? undefined : {
-          results : {
+          result : {
               success       : true
             , count         : results.rowCount
             , affectedCount : results.rowCount
@@ -150,7 +150,7 @@ module.exports = (function () {
       var query = generateDeleteQuery(one, tableName, condition, callBack);
       exec(query, function (err, results) {
         callBack(err, err ? undefined : {
-          results : {
+          result : {
               success       : true
             , count         : results.rowCount
             , affectedCount : results.rowCount
