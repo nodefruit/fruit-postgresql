@@ -26,7 +26,6 @@ This is an example the options you need to pass to the fruit constructor:
     , database            : 'db'
     , user                : 'user'
     , password            : '******'
-    , multipleStatements  : true
   }
 ```
 
